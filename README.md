@@ -1,2 +1,2 @@
 # ML-Practice-Excercises
-Data wrangling, model building and evaluation
+My Data wrangling, model building and evaluation practice excercise
