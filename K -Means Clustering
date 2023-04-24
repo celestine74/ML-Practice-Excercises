@@ -1,1 +1,96 @@
 
+# Importing all the necessary libraries
+import pandas as pd
+import numpy as np
+from sklearn import preprocessing
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import StandardScaler, normalize
+from scipy.cluster.hierarchy import dendrogram, linkage
+from sklearn.cluster import KMeans
+from scipy.cluster import hierarchy
+from scipy.spatial.distance import cdist
+from sklearn.decomposition import PCA
+from sklearn.cluster import AgglomerativeClustering
+from sklearn import metrics
+from sklearn.metrics import silhouette_score
+import scipy.cluster.hierarchy as shc
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+# Importing data
+data = pd.read_csv("~/Desktop/Desktop/Dataset/Mall_Customers_BP.csv")
+data.head()
+
+# Performing Standard Scaling while pre-processing data
+mms = MinMaxScaler()
+df[['Annual Income (k$)', 'Spending Score (1-100)']] = mms.fit_transform(df[['Annual Income (k$)', 'Spending Score (1-100)']])
+print(df)
+
+# Optimum number of clusters using elbow method -
+
+distortions = []
+inertias = []
+mapping1 = {}
+mapping2 = {}
+K = range(1, 15)
+
+# Making a seperate array file having data for Annual income and spending score
+
+array1 = df['Annual Income (k$)'].to_numpy()
+array2 = df['Spending Score (1-100)'].to_numpy()
+array = np.array(list(zip(array1, array2))).reshape(len(array1), 2)
+
+for k in K:
+    # Building and fitting the model
+    kmeanModel = KMeans(n_clusters=k).fit(array)
+    kmeanModel.fit(array)
+
+    distortions.append(sum(np.min(cdist(array, kmeanModel.cluster_centers_,
+                                        'euclidean'), axis=1)) / array.shape[0])
+    inertias.append(kmeanModel.inertia_)
+
+    mapping1[k] = sum(np.min(cdist(array, kmeanModel.cluster_centers_,
+                                   'euclidean'), axis=1)) / array.shape[0]
+    mapping2[k] = kmeanModel.inertia_
+ 
+ # Using Distortion -
+# Tabulating the results -
+
+for key,val in mapping1.items():
+    print(str(key)+' : '+str(val))
+
+# Visualizing the result -
+
+plt.plot(K, distortions, 'bx-')
+plt.xlabel('Values of K')
+plt.ylabel('Distortion')
+plt.title('The Elbow Method using Distortion')
+plt.show()
+
+# Using Inertias -
+# Tabulating the results -
+
+for key,val in mapping2.items():
+    print(str(key)+' : '+str(val))
+
+# Visualizing the result -
+
+plt.plot(K, inertias, 'bx-')
+plt.xlabel('Values of K')
+plt.ylabel('Inertia')
+plt.title('The Elbow Method using Inertia')
+plt.show()
+
+
+# Finding Centroids -
+data = pd.DataFrame(array, columns=('Annual Income (k$)', 'Spending Score (1-100)'))
+data.head()
+
+kmeans = KMeans(n_clusters=5).fit(data)
+centroids = kmeans.cluster_centers_
+print(centroids)
+
+plt.scatter(data['Annual Income (k$)'], data['Spending Score (1-100)'], c= kmeans.labels_.astype(float))
+plt.scatter(centroids[:, 0], centroids[:, 1], c='red')
+plt.show()
+    
