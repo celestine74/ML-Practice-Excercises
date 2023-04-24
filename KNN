@@ -1,1 +1,83 @@
 
+# Importing all the necessary libraries
+from sklearn.datasets import load_iris
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+# Loading data 
+irisData = load_iris() 
+
+# Create feature and target arrays 
+X = irisData.data 
+y = irisData.target 
+  
+# Printing Data shape    
+print('X matrix dimensionality:', X.shape)
+print('Y vector dimensionality:', y.shape)
+
+# Split into training dataset and test dataset 
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.25, random_state=5) 
+
+# Model Building
+knn = KNeighborsClassifier(n_neighbors=4) 
+# Here we can specify 4 things: n_neighbors, weights, algorithm and metric.
+  
+# Fitting the model
+knn.fit(X_train, y_train) 
+  
+# Predict on dataset which model has not seen before 
+y_pred = knn.predict(X_test)
+print(y_pred) 
+
+# Making the Confusion Matrix
+cm = confusion_matrix(y_test, y_pred)
+cm
+
+# 15-fold (cv=15) cross-validation with K=4 (n_neighbors=4) for KNN (the n_neighbors parameter)
+
+# Instantiate model
+knn = KNeighborsClassifier(n_neighbors=4)
+
+# cross_val_score takes care of splitting X and y into the 15 folds that's why we pass X and y entirely instead of X_train and y_train
+scores = cross_val_score(knn, X, y, cv=15, scoring='accuracy')
+print(scores)
+
+# Mean Score
+print(scores.mean())
+
+# Searching for an optimal value of K for KNN
+
+# list of scores from k_range
+k_range = range(1, 50) 
+
+# List to store scores
+k_scores = []
+
+# Looping through values of k
+for k in k_range:
+    # Running KNeighborsClassifier with k neighbours
+    knn = KNeighborsClassifier(n_neighbors=k)
+    # Obtaining cross_val_score for KNeighborsClassifier with k neighbours
+    scores = cross_val_score(knn, X, y, cv=15, scoring='accuracy')
+    # Appending mean of scores for k neighbors to k_scores list
+    k_scores.append(scores.mean())
+print(k_scores)
+
+# Ploting the value of K for KNN (x-axis) versus the cross-validated accuracy (y-axis)
+plt.plot(k_range, k_scores)
+plt.xlabel('Value of K for KNN')
+plt.ylabel('Cross-Validated Accuracy')
+
+# Optimum model
+knn = KNeighborsClassifier(n_neighbors=13)
+
+# Printing Scores
+print(scores)
+
+# Printing mean scores
+print(scores.mean())
+
