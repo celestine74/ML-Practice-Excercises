@@ -1,1 +1,73 @@
 
+# Importing important libraries
+from sklearn.ensemble import AdaBoostClassifier, AdaBoostRegressor
+from sklearn import datasets
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+# Importing the data
+iris = datasets.load_iris()
+
+# printing the keys
+print(iris.keys())
+
+# EDA
+print(iris.DESCR)
+
+# Separating the data into input and output features
+X = iris.data
+y = iris.target
+
+# Train Test Split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 7)
+
+# Initializing the model
+model = AdaBoostClassifier(n_estimators = 50, learning_rate = 1)
+
+# Fitting the model
+model.fit(X_train, y_train)
+
+# Taking predictions from the model
+y_pred = model.predict(X_test)
+
+# Accuracy
+print('Accuracy :', accuracy_score(y_test, y_pred))
+
+
+# XGBoost
+
+# Importing important library
+from xgboost import XGBClassifier, XGBRegressor
+
+# Initializing the model
+xgb = XGBClassifier()
+
+# Fitting the data
+xgb.fit(X_train, y_train)
+
+# Getting model hyper-parameters
+print(xgb)
+
+ Taking predictions from the model
+y_pred = xgb.predict(X_test)
+
+# Accuracy
+print('Accuracy :', accuracy_score(y_test, y_pred))
+
+
+# catBoost
+
+Importing important libraries
+from catboost import CatBoostClassifier, CatBoostRegressor
+
+# Initializing the model
+cat = CatBoostClassifier()
+
+# Fitting the model
+cat.fit(X_train, y_train)
+
+# Taking predictions from the model
+y_pred = cat.predict(X_test)
+
+# Accuracy
+print('Accuracy :', accuracy_score(y_test, y_pred))
