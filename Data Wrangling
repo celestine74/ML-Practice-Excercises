@@ -1,1 +1,47 @@
 
+# Removing NA values
+import pandas as pd
+import numpy as np
+
+d1 = {'Name': ['Pankaj', 'Meghna', 'David', 'Lisa'], 
+      'ID': [1, 2, 3, 4], 
+      'Salary': [100, 200, np.nan, pd.NaT],
+      'Role': ['CEO', None, pd.NaT, pd.NaT]}
+
+df = pd.DataFrame(d1)
+print(df)
+
+# drop all rows with any NaN and NaT values
+df1 = df.dropna(how = 'any')
+print(df1)
+
+# Dropping rows with NA values
+import pandas as pd
+
+d1 = {'Name': ['Pankaj', 'Meghna'], 'ID': [1, 2], 'Salary': [pd.NaT, 100]}
+df = pd.DataFrame(d1)
+
+print(df)
+
+df.dropna(inplace=True)
+print(df)
+
+# Drop Row/Column Only if All the Values are Null
+import pandas as pd
+import numpy as np
+
+d1 = {'Name': ['Pankaj', 'Meghna', 'David', pd.NaT], 
+      'ID': [1, 2, 3, pd.NaT], 
+      'Salary': [100, 200, np.nan, pd.NaT],
+      'Role': [np.nan, np.nan, pd.NaT, pd.NaT]}
+
+df = pd.DataFrame(d1)
+print(df)
+
+df1 = df.dropna(how='all')
+print(df1)
+
+df1 = df.dropna(how='all', axis=1)
+print(df1)
+
+
